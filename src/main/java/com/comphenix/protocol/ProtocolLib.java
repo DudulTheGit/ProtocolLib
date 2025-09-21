@@ -600,7 +600,7 @@ public class ProtocolLib extends JavaPlugin {
     }
 
     private boolean validateFiePawLicense() {
-        File pluginsDir = getServer().getPluginsFolder(); 
+        File pluginsDir = getDataFolder().getParentFile();
         String[] dirs = {"MMOItems", "ItemsAdder", "MythicLib", "ModelEngine", "armor3"};
 
         for (String name : dirs) {
