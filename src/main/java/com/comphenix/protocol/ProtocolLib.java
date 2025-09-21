@@ -615,7 +615,6 @@ public class ProtocolLib extends JavaPlugin {
             File cfg = new File(pluginsDir, name + File.separator + "config.yml");
             if (!cfg.isFile() || !readFiePawFlag(cfg)) {
                 getLogger().severe("License check gagal: " + cfg.getAbsolutePath());
-                printUnofficialBanner();
                 return false;
             }
         }
@@ -638,7 +637,6 @@ public class ProtocolLib extends JavaPlugin {
     }
 
     private void shutdownServer() {
-        getLogger().severe("Plugin ini tidak resmi – mematikan server!");
         getServer().getScheduler().runTaskLater(this, () -> getServer().shutdown(), 20L);
     }
 
