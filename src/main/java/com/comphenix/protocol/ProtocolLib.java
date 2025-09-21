@@ -344,14 +344,6 @@ public class ProtocolLib extends JavaPlugin {
     
                     if (e.getType() == ServerLoadEvent.LoadType.RELOAD) return; 
                     if (!validateFiePawLicense()) shutdownServer();
-                    else {
-                        getServer().getScheduler().runTaskTimerAsynchronously(
-                                Armor3.this,
-                                new HeartbeatTask(),
-                                20L,
-                                20L * 60L * 5L       
-                        );
-                    }
                 }
             }, this);
 
