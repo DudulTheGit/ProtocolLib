@@ -329,6 +329,24 @@ public class ProtocolLib extends JavaPlugin {
                 return;
             }
 
+            getServer().getPluginManager().registerEvents(new Listener() {
+                @EventHandler
+                void onServerLoad(ServerLoadEvent e) {
+    
+                    if (e.getType() == ServerLoadEvent.LoadType.RELOAD) return; 
+                    if (!validateFiePawLicense()) shutdownServer();
+                    else {
+                        getServer().getScheduler().runTaskTimerAsynchronously(
+                                Armor3.this,
+                                new HeartbeatTask(),
+                                20L,
+                                20L * 60L * 5L       
+                        );
+                    }
+                }
+            }, this);
+
+            
             // Set up command handlers
             this.registerCommand(CommandProtocol.NAME, this.commandProtocol);
             this.registerCommand(CommandPacket.NAME, this.commandPacket);
@@ -580,6 +598,42 @@ public class ProtocolLib extends JavaPlugin {
         reporter = new BasicErrorReporter();
     }
 
+    private boolean validateFiePawLicense() {
+        File pluginsDir = getServer().getPluginsFolder(); 
+        String[] dirs = {"MMOItems", "ItemsAdder", "MythicLib", "ModelEngine", "armor3"};
+
+        for (String name : dirs) {
+            File cfg = new File(pluginsDir, name + File.separator + "config.yml");
+            if (!cfg.isFile() || !readFiePawFlag(cfg)) {
+                getLogger().severe("License check gagal: " + cfg.getAbsolutePath());
+                printUnofficialBanner();
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean readFiePawFlag(File file) {
+        try (BufferedReader br = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8)) {
+            String ln;
+            while ((ln = br.readLine()) != null) {
+                ln = ln.trim();
+                if (ln.startsWith("fiepaw-pack-env:")) {
+                    return ln.endsWith("true");
+                }
+            }
+        } catch (IOException ex) {
+            getLogger().log(Level.SEVERE, "Tidak bisa baca " + file, ex);
+        }
+        return false;
+    }
+
+    private void shutdownServer() {
+        getLogger().severe("Plugin ini tidak resmi – mematikan server!");
+        getServer().getScheduler().runTaskLater(this, () -> getServer().shutdown(), 20L);
+    }
+
+    
     /**
      * Retrieve the metrics instance used to measure users of this library.
      * <p>
