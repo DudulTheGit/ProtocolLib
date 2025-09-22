@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ChatListener implements Listener {
 
-    private final Armor3 plugin;
+    private final ProtocolLib plugin;
 
     public ChatListener(Armor3 plugin) {
         this.plugin = plugin;
