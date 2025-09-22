@@ -343,10 +343,11 @@ public class ProtocolLib extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        saveDefaultConfig();
         try {
             Server server = this.getServer();
             PluginManager manager = server.getPluginManager();
-
+            
             // Silly plugin reloaders!
             if (protocolManager == null) {
                 highlyVisibleError(
