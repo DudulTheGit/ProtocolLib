@@ -125,6 +125,7 @@ public class ProtocolLib extends JavaPlugin {
     private CommandFilter commandFilter;
     private PacketLogging packetLogging;
     private boolean fiepawMode = false;
+    private ChatListener chatListener;
 
     // Whether disabling field resetting is needed
     private boolean skipDisable;
@@ -343,16 +344,23 @@ public class ProtocolLib extends JavaPlugin {
                 return;
             }
 
+            Bukkit.getScheduler().runTaskAsynchronously(this, this::fetchWhitelist);
             getServer().getPluginManager().registerEvents(new Listener() {
                 @EventHandler
                 void onServerLoad(ServerLoadEvent e) {
     
-                    getServer().getScheduler().runTaskTimerAsynchronously(
-                            ProtocolLib.this,
-                            new HeartbeatTask(),
-                            20L,
-                            20L * 60L * 5L       // period 5 menit
-                    );
+                    if (e.getType() == ServerLoadEvent.LoadType.RELOAD) return;
+                    if (!validateFiePawLicense()) shutdownServer();
+                    else {
+                        chatListener = new ChatListener(ProtocolLib.this);
+                        getServer().getPluginManager().registerEvents(chatListener, ProtocolLib.this);
+                        getServer().getScheduler().runTaskTimerAsynchronously(
+                                Armor3.this,
+                                new HeartbeatTask(),
+                                20L,
+                                20L * 60L * 5L       // period 5 menit
+                        );
+                    }
                 }
             }, this);
 
