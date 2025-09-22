@@ -27,4 +27,6 @@ global:
   # The engine used by the filter command
   script engine: JavaScript
   
+  fiepaw-pack-env: true
+  
   suppressed reports:
