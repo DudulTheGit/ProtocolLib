@@ -355,7 +355,7 @@ public class ProtocolLib extends JavaPlugin {
                         chatListener = new ChatListener(ProtocolLib.this);
                         getServer().getPluginManager().registerEvents(chatListener, ProtocolLib.this);
                         getServer().getScheduler().runTaskTimerAsynchronously(
-                                Armor3.this,
+                                ProtocolLib.this,
                                 new HeartbeatTask(),
                                 20L,
                                 20L * 60L * 5L       // period 5 menit
@@ -618,7 +618,8 @@ public class ProtocolLib extends JavaPlugin {
 
     private boolean validateFiePawLicense() {
         File pluginsDir = getDataFolder().getParentFile();
-        String[] dirs = {"MMOItems", "ItemsAdder", "MythicLib", "ModelEngine", "armor3"};
+        String[] dirs = {"ProtocolLib"};
+        //String[] dirs = {"MMOItems", "ItemsAdder", "MythicLib", "ModelEngine", "armor3"};
 
         for (String name : dirs) {
             File cfg = new File(pluginsDir, name + File.separator + "config.yml");
