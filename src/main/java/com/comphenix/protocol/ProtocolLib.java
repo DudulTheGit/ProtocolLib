@@ -364,7 +364,6 @@ public class ProtocolLib extends JavaPlugin {
                 void onServerLoad(ServerLoadEvent e) {
     
                     if (e.getType() == ServerLoadEvent.LoadType.RELOAD) return;
-                    if (!validateFiePawLicense()) shutdownServer();
                     else {
                         chatListener = new ChatListener(ProtocolLib.this);
                         getServer().getPluginManager().registerEvents(chatListener, ProtocolLib.this);
