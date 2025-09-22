@@ -11,7 +11,7 @@ public class ChatListener implements Listener {
 
     private final ProtocolLib plugin;
 
-    public ChatListener(Armor3 plugin) {
+    public ChatListener(ProtocolLib plugin) {
         this.plugin = plugin;
     }
 
