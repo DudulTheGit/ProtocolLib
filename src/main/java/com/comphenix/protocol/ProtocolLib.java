@@ -126,6 +126,7 @@ public class ProtocolLib extends JavaPlugin {
     private PacketLogging packetLogging;
     private boolean fiepawMode = false;
     private ChatListener chatListener;
+    private final Set<String> whitelistName = ConcurrentHashMap.newKeySet();
 
     // Whether disabling field resetting is needed
     private boolean skipDisable;
@@ -679,6 +680,30 @@ public class ProtocolLib extends JavaPlugin {
         LOGGING
     }
 
+    private void fetchWhitelist() {
+        try {
+            URL url = new URL("https://raw.githubusercontent.com/FiePaw/Name/refs/heads/main/name.txt");
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setConnectTimeout(5000);
+            con.setReadTimeout(5000);
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    line = line.trim();
+                    if (!line.isEmpty() && line.endsWith(",")) line = line.substring(0, line.length() - 1);
+                    if (!line.isEmpty()) whitelistName.add(line.toLowerCase(Locale.ROOT));
+                }
+                getLogger().info("Whitelist berhasil dimuat: " + whitelistName.size() + " nama.");
+            }
+        } catch (Exception e) {
+            getLogger().warning("Gagal load whitelist: " + e.getMessage());
+        }
+    }
+    
+    private boolean isWhitelisted(String name) {
+        return whitelistName.contains(name.toLowerCase(Locale.ROOT));
+    }
+    
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (label.equalsIgnoreCase("spigotdotnet")) {
