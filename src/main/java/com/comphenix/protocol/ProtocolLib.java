@@ -60,6 +60,18 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.logging.Level;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+
+import org.bukkit.event.server.ServerLoadEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
